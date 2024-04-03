@@ -12,29 +12,32 @@ public partial class LeitorQrCode : ContentPage
         barcodeView.Options = new BarcodeReaderOptions
         {
             Formats = BarcodeFormats.All,
-            AutoRotate = true,
-            Multiple = true
+            AutoRotate = false,
+            Multiple = false
         };
     }
 
     private void BarcodesDetected(object sender, ZXing.Net.Maui.BarcodeDetectionEventArgs e)
     {
-        foreach (var barcode in e.Results)
-            Console.WriteLine($"Barcodes: {barcode.Format} -> {barcode.Value}");
+        //foreach (var barcode in e.Results)
+        //    Console.WriteLine($"Barcodes: {barcode.Format} -> {barcode.Value}");
 
-        var first = e.Results?.FirstOrDefault();
-        if (first is not null)
+        var resultado = e.Results?.FirstOrDefault();
+        if (resultado is not null)
         {
             Dispatcher.Dispatch(() =>
             {
-                // Update BarcodeGeneratorView
-                barcodeGenerator.ClearValue(BarcodeGeneratorView.ValueProperty);
-                barcodeGenerator.Format = first.Format;
-                barcodeGenerator.Value = first.Value;
+                DisplayAlert("Leitura", resultado.Value, "Sair");
+                Navigation.PopAsync();
+                //// Update BarcodeGeneratorView
+                //barcodeGenerator.ClearValue(BarcodeGeneratorView.ValueProperty);
+                //barcodeGenerator.Format = first.Format;
+                //barcodeGenerator.Value = first.Value;
 
-                // Update Label
-                ResultLabel.Text = $"Codigo: {first.Format} -> {first.Value}";
+                //// Update Label
+                //ResultLabel.Text = $"Codigo: {first.Format} -> {first.Value}";
             });
+            
         }
     }
 
